@@ -1,62 +1,69 @@
 import { z } from 'zod'
+import { isValidUrl, validateDocument, validateClientOptions } from './validate'
 
-export const DocumentTypesEnum = z.enum([
+// Schema definitions
+const documentTypesEnum = z.enum([
   'application/pdf',
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.oasis.opendocument.text'
 ])
-export type DocumentTypes = z.infer<typeof DocumentTypesEnum>
 
-export const ImageTypesEnum = z.enum(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'])
-export type ImageTypes = z.infer<typeof ImageTypesEnum>
+const imageTypesEnum = z.enum(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'])
 
-export const DocExtractClientOptionsSchema = z.object({
-  allowedImages: z.array(ImageTypesEnum).optional(),
-  allowedDocuments: z.array(DocumentTypesEnum).optional()
+const docExtractClientOptionsSchema = z.object({
+  allowedImages: z.array(imageTypesEnum).optional(),
+  allowedDocuments: z.array(documentTypesEnum).optional()
 })
-export type DocExtractClientOptions = z.infer<typeof DocExtractClientOptionsSchema>
 
-export const DocumentSchema = z.object({
-  filename: z.string(),
-  type: z.union([DocumentTypesEnum, ImageTypesEnum]),
-  url: z.string().url().optional(),
+const documentSchema = z.object({
+  filename: z.string().optional(),
+  type: z.string().optional(), // Accept any string for type, validation will be done separately
+  url: z
+    .string()
+    .refine(val => !val || isValidUrl(val), { message: 'Invalid URL format' })
+    .optional(),
   contents: z.instanceof(Buffer).optional()
 })
-export type Document = z.infer<typeof DocumentSchema>
+
+// Generate and export types from schemas
+/**
+ * Supported document MIME types
+ */
+export type DocumentTypes = z.infer<typeof documentTypesEnum>
+
+/**
+ * Supported image MIME types
+ */
+export type ImageTypes = z.infer<typeof imageTypesEnum>
+
+/**
+ * Client options for DocExtract constructor
+ */
+export type DocExtractClientOptions = z.infer<typeof docExtractClientOptionsSchema>
+
+/**
+ * Document object for text extraction
+ */
+export type Document = z.infer<typeof documentSchema>
 
 export class DocExtract {
   // Private Members
   private allowedImages: ImageTypes[]
   private allowedDocuments: DocumentTypes[]
 
-  // Constuctor
+  // Constructor
   constructor(options?: DocExtractClientOptions) {
-    this.allowedImages = options?.allowedImages || ['image/jpeg', 'image/png', 'image/jpg', 'image/webp']
-    this.allowedDocuments = options?.allowedDocuments || [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.oasis.opendocument.text'
-    ]
+    // Validate options using the utility function
+    const validatedOptions = validateClientOptions(options, docExtractClientOptionsSchema)
+    this.allowedImages = validatedOptions.allowedImages
+    this.allowedDocuments = validatedOptions.allowedDocuments
   }
 
   // Public Methods
   public async extractText(document: Document): Promise<string> {
-    if (!document.url && !document.contents) {
-      throw new Error('Document must have a url or contents')
-    }
-
-    // Check if the type is a document type
-    const isDocumentType = this.allowedDocuments.includes(document.type as DocumentTypes)
-    // Check if the type is an image type
-    const isImageType = this.allowedImages.includes(document.type as ImageTypes)
-
-    if (!isDocumentType && !isImageType) {
-      throw new Error(
-        `File type '${document.type}' is not allowed. Allowed types: ${[...this.allowedDocuments, ...this.allowedImages].join(', ')}`
-      )
-    }
+    // Validate document using the utility function
+    validateDocument(document, documentSchema, this.allowedDocuments, this.allowedImages)
 
     return 'Document extracted'
   }

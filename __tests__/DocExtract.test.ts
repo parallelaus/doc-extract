@@ -82,6 +82,125 @@ describe('Class: DocExtract', () => {
       })
     })
 
+    describe('Validation - Conditional requirements', () => {
+      describe('URL-based documents', () => {
+        it('should accept URL-only document without filename or type', async () => {
+          const document: Document = {
+            url: 'https://example.com/test.pdf'
+          }
+
+          await expect(docExtract.extractText(document)).resolves.toBe('Document extracted')
+        })
+
+        it('should accept URL document with only filename', async () => {
+          const document: Document = {
+            url: 'https://example.com/test.pdf',
+            filename: 'test.pdf'
+          }
+
+          await expect(docExtract.extractText(document)).resolves.toBe('Document extracted')
+        })
+
+        it('should accept URL document with only type', async () => {
+          const document: Document = {
+            url: 'https://example.com/test.pdf',
+            type: 'application/pdf'
+          }
+
+          await expect(docExtract.extractText(document)).resolves.toBe('Document extracted')
+        })
+
+        it('should reject URL document with invalid type', async () => {
+          const document: Document = {
+            url: 'https://example.com/test.txt',
+            type: 'text/plain' as any
+          }
+
+          await expect(docExtract.extractText(document)).rejects.toThrow(/File type 'text\/plain' is not allowed/)
+        })
+      })
+
+      describe('Buffer-based documents', () => {
+        it('should reject Buffer document without filename', async () => {
+          const document: Document = {
+            contents: Buffer.from('test content'),
+            type: 'application/pdf'
+          }
+
+          await expect(docExtract.extractText(document)).rejects.toThrow(
+            'Filename is required when providing document contents'
+          )
+        })
+
+        it('should reject Buffer document without type', async () => {
+          const document: Document = {
+            contents: Buffer.from('test content'),
+            filename: 'test.pdf'
+          }
+
+          await expect(docExtract.extractText(document)).rejects.toThrow(
+            'Type is required when providing document contents'
+          )
+        })
+
+        it('should reject Buffer document with invalid type', async () => {
+          const document: Document = {
+            contents: Buffer.from('test content'),
+            filename: 'test.txt',
+            type: 'text/plain' as any
+          }
+
+          await expect(docExtract.extractText(document)).rejects.toThrow(/File type 'text\/plain' is not allowed/)
+        })
+
+        it('should accept Buffer document with valid filename and type', async () => {
+          const document: Document = {
+            contents: Buffer.from('test content'),
+            filename: 'test.pdf',
+            type: 'application/pdf'
+          }
+
+          await expect(docExtract.extractText(document)).resolves.toBe('Document extracted')
+        })
+      })
+
+      describe('Mixed source documents', () => {
+        it('should require filename and type when both URL and Buffer are provided', async () => {
+          // Missing filename
+          const document1: Document = {
+            contents: Buffer.from('test content'),
+            url: 'https://example.com/test.pdf',
+            type: 'application/pdf'
+          }
+
+          await expect(docExtract.extractText(document1)).rejects.toThrow(
+            'Filename is required when providing document contents'
+          )
+
+          // Missing type
+          const document2: Document = {
+            contents: Buffer.from('test content'),
+            url: 'https://example.com/test.pdf',
+            filename: 'test.pdf'
+          }
+
+          await expect(docExtract.extractText(document2)).rejects.toThrow(
+            'Type is required when providing document contents'
+          )
+
+          // Both provided (valid)
+          const document3: Document = {
+            contents: Buffer.from('test content'),
+            url: 'https://example.com/test.pdf',
+            filename: 'test.pdf',
+            type: 'application/pdf'
+          }
+
+          await expect(docExtract.extractText(document3)).resolves.toBe('Document extracted')
+        })
+      })
+    })
+
     describe('Validation - Document types', () => {
       describe('Default allowed document types', () => {
         it('should accept PDF documents', async () => {
