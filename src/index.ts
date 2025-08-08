@@ -1,22 +1,29 @@
-type DocumentTypes =
-  | 'application/pdf'
-  | 'application/msword'
-  | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  | 'application/vnd.oasis.opendocument.text'
+import { z } from 'zod'
 
-type ImageTypes = 'image/jpeg' | 'image/png' | 'image/jpg' | 'image/webp'
+export const DocumentTypesEnum = z.enum([
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.oasis.opendocument.text'
+])
+export type DocumentTypes = z.infer<typeof DocumentTypesEnum>
 
-export type DocExtractClientOptions = {
-  allowedImages?: ImageTypes[]
-  allowedDocuments?: DocumentTypes[]
-}
+export const ImageTypesEnum = z.enum(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'])
+export type ImageTypes = z.infer<typeof ImageTypesEnum>
 
-export type Document = {
-  filename: string
-  type: DocumentTypes | ImageTypes
-  url?: string
-  contents?: Buffer
-}
+export const DocExtractClientOptionsSchema = z.object({
+  allowedImages: z.array(ImageTypesEnum).optional(),
+  allowedDocuments: z.array(DocumentTypesEnum).optional()
+})
+export type DocExtractClientOptions = z.infer<typeof DocExtractClientOptionsSchema>
+
+export const DocumentSchema = z.object({
+  filename: z.string(),
+  type: z.union([DocumentTypesEnum, ImageTypesEnum]),
+  url: z.string().url().optional(),
+  contents: z.instanceof(Buffer).optional()
+})
+export type Document = z.infer<typeof DocumentSchema>
 
 export class DocExtract {
   // Private Members
