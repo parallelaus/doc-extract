@@ -4,12 +4,7 @@
   "roots": ["<rootDir>/src", "<rootDir>/__tests__"],
   "testMatch": ["**/__tests__/**/*.ts", "**/?(*.)+(spec|test).ts"],
   "transform": {
-    "^.+\\.tsx?$": [
-      "ts-jest",
-      {
-        "isolatedModules": true
-      }
-    ]
+    "^.+\\.tsx?$": ["ts-jest", {}]
   },
   "moduleNameMapper": {
     "^(.+)\\.js$": "$1"

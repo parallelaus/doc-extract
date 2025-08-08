@@ -2,7 +2,8 @@
  * Utility functions for doc-extract
  */
 import { z } from 'zod'
-import type { Document, DocumentTypes, ImageTypes, DocExtractClientOptions } from './index'
+import { Document, DocumentTypes, ImageTypes, DocExtractClientOptions, documentSchema } from './types.js'
+import { getDocumentType } from './utils.js'
 
 /**
  * Validates if a string is a valid URL
@@ -19,21 +20,32 @@ export const isValidUrl = (value: string): boolean => {
   }
 }
 
-/**
- * Validates a document against allowed document and image types
- * @param document The document to validate
- * @param documentSchema Zod schema for document validation
- * @param allowedDocuments List of allowed document MIME types
- * @param allowedImages List of allowed image MIME types
- * @throws Error if document is invalid
- * @returns The validated document
- */
-export const validateDocument = (
+export async function validateDocument(
   document: Document,
-  documentSchema: z.ZodType<Document>,
   allowedDocuments: DocumentTypes[],
   allowedImages: ImageTypes[]
-): Document => {
+): Promise<Document> {
+  // Validate document structure
+  const validatedDocument = validateDocumentStructure(document, documentSchema)
+
+  // Check if document type is allowed
+  if (!validatedDocument.type) {
+    // Get the content-type from headers
+    validatedDocument.type = await getDocumentType(validatedDocument.url!)
+  }
+
+  // Validate document type
+  return validateDocumentType(validatedDocument, allowedDocuments, allowedImages)
+}
+
+/**
+ * Validates the structure of a document
+ * @param document The document to validate
+ * @param documentSchema Zod schema for document validation
+ * @throws Error if document structure is invalid
+ * @returns The validated document
+ */
+export const validateDocumentStructure = (document: Document, documentSchema: z.ZodType<Document>): Document => {
   // Validate document with schema
   const validatedDocument = documentSchema.parse(document)
   // Check if document has a source (url or contents)
@@ -50,21 +62,39 @@ export const validateDocument = (
       throw new Error('Type is required when providing document contents')
     }
   }
-  // If type is provided, validate it against allowed types
-  if (validatedDocument.type) {
-    // Check if the type is a document type
-    const isDocumentType = allowedDocuments.includes(validatedDocument.type as DocumentTypes)
-    // Check if the type is an image type
-    const isImageType = allowedImages.includes(validatedDocument.type as ImageTypes)
-
-    if (!isDocumentType && !isImageType) {
-      throw new Error(
-        `File type '${validatedDocument.type}' is not allowed. Allowed types: ${[...allowedDocuments, ...allowedImages].join(', ')}`
-      )
-    }
-  }
 
   return validatedDocument
+}
+
+/**
+ * Validates if a document type is allowed
+ * @param document The document to validate
+ * @param allowedDocuments List of allowed document MIME types
+ * @param allowedImages List of allowed image MIME types
+ * @throws Error if document type is not allowed
+ * @returns True if the document type is allowed
+ */
+export const validateDocumentType = (
+  document: Document,
+  allowedDocuments: DocumentTypes[],
+  allowedImages: ImageTypes[]
+): Document => {
+  // If no type is provided, we can't validate it
+  if (!document.type) {
+    throw new Error('Document type not provided, can not validate document type.')
+  }
+  // Check if the type is a document type
+  const isDocumentType = allowedDocuments.includes(document.type as DocumentTypes)
+  // Check if the type is an image type
+  const isImageType = allowedImages.includes(document.type as ImageTypes)
+
+  if (!isDocumentType && !isImageType) {
+    throw new Error(
+      `File type '${document.type}' is not allowed. Allowed types: ${[...allowedDocuments, ...allowedImages].join(', ')}`
+    )
+  }
+
+  return document
 }
 
 /**
