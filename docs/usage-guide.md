@@ -136,15 +136,38 @@ docExtract.registerProcessor(imageProcessor)
 
 ## Creating Custom Processors
 
-You can create custom processors for additional document types by implementing the `DocumentProcessor` interface:
+You can create custom processors for additional document types by implementing the `DocumentProcessor` interface. The project uses Zod schemas as the single source of truth for types, with TypeScript types generated using `z.infer<typeof schemaName>`.
+
+### Within the Monorepo
+
+When creating a processor within the monorepo, import types directly from the core package:
 
 ```typescript
-import { DocumentProcessor, Document } from '@parallelsoftware/doc-extract'
+// Import types directly from the core package using relative paths
+import type { Document } from '../../core/src/lib/types.js'
+import type { DocumentProcessor } from '../../core/src/lib/DocumentProcessor.js'
 
 export class CustomProcessor implements DocumentProcessor {
   public readonly supportedMimeType = 'application/custom-format'
   
-  public async process(document: Document): Promise<string> {
+  public async process(doc: Document): Promise<string> {
+    // Custom logic to extract text from the document
+    return 'Extracted text'
+  }
+}
+```
+
+### As an External Package
+
+When creating a processor as an external package (outside the monorepo), import types from the published package:
+
+```typescript
+import type { DocumentProcessor, Document } from '@parallelsoftware/doc-extract'
+
+export class CustomProcessor implements DocumentProcessor {
+  public readonly supportedMimeType = 'application/custom-format'
+  
+  public async process(doc: Document): Promise<string> {
     // Custom logic to extract text from the document
     return 'Extracted text'
   }
@@ -185,9 +208,31 @@ async function extractWithErrorHandling() {
 ### Adding a New Processor
 
 1. Create a new package in the `packages` directory
-2. Implement the `DocumentProcessor` interface
-3. Export your processor in the package's `index.ts` file
-4. Update documentation to include the new processor
+2. Import types directly from the core package:
+   ```typescript
+   // Import types directly from the core package using relative paths
+   import type { Document } from '../../core/src/lib/types.js'
+   import type { DocumentProcessor } from '../../core/src/lib/DocumentProcessor.js'
+   ```
+3. Configure your `tsconfig.json` to support direct type imports:
+   ```json
+   "compilerOptions": {
+     "moduleResolution": "node",
+     "paths": {
+       "@parallelsoftware/doc-extract": ["../core/dist"],
+       "@parallelsoftware/doc-extract/*": ["../core/dist/*"]
+     }
+   }
+   ```
+4. Add project references to the core package:
+   ```json
+   "references": [
+     { "path": "../core" }
+   ]
+   ```
+5. Implement the `DocumentProcessor` interface
+6. Export your processor in the package's `index.ts` file
+7. Update documentation to include the new processor
 
 ### Testing
 

@@ -64,6 +64,109 @@ const extractedText = await docExtract.extract({
 console.log(extractedText)
 ```
 
+## Usage Examples
+
+### Processing Different Document Types
+
+```typescript
+import { DocExtract } from '@parallelsoftware/doc-extract'
+import { PdfProcessor } from '@parallelsoftware/doc-extract-pdf'
+import { DocxProcessor } from '@parallelsoftware/doc-extract-docx'
+import { ImageProcessor } from '@parallelsoftware/doc-extract-image'
+
+// Create an instance with all processors
+const docExtract = new DocExtract()
+docExtract.registerProcessor(new PdfProcessor())
+docExtract.registerProcessor(new DocxProcessor())
+docExtract.registerProcessor(new ImageProcessor())
+
+// Process a PDF from a URL
+async function processPdfFromUrl(url: string): Promise<string> {
+  return await docExtract.extract({
+    type: 'application/pdf',
+    url: url
+  })
+}
+
+// Process a DOCX from a file buffer
+async function processDocxFromBuffer(buffer: Buffer): Promise<string> {
+  return await docExtract.extract({
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    contents: buffer
+  })
+}
+
+// Process an image
+async function processImage(buffer: Buffer): Promise<string> {
+  return await docExtract.extract({
+    type: 'image/jpeg',
+    contents: buffer
+  })
+}
+```
+
+### Dynamic Processor Loading
+
+```typescript
+import { DocExtract } from '@parallelsoftware/doc-extract'
+
+async function processDocument(document: {
+  type: string;
+  contents?: Buffer;
+  url?: string;
+}): Promise<string> {
+  const docExtract = new DocExtract()
+  
+  // Dynamically import only the processor needed for this document
+  if (document.type === 'application/pdf') {
+    const { PdfProcessor } = await import('@parallelsoftware/doc-extract-pdf')
+    docExtract.registerProcessor(new PdfProcessor())
+  } else if (document.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    const { DocxProcessor } = await import('@parallelsoftware/doc-extract-docx')
+    docExtract.registerProcessor(new DocxProcessor())
+  } else if (document.type.startsWith('image/')) {
+    const { ImageProcessor } = await import('@parallelsoftware/doc-extract-image')
+    docExtract.registerProcessor(new ImageProcessor())
+  } else {
+    throw new Error(`Unsupported document type: ${document.type}`)
+  }
+  
+  return await docExtract.extract(document)
+}
+```
+
+### Error Handling
+
+```typescript
+import { DocExtract } from '@parallelsoftware/doc-extract'
+import { PdfProcessor } from '@parallelsoftware/doc-extract-pdf'
+
+async function extractWithErrorHandling(buffer: Buffer): Promise<string | null> {
+  const docExtract = new DocExtract()
+  docExtract.registerProcessor(new PdfProcessor())
+  
+  try {
+    return await docExtract.extract({
+      type: 'application/pdf',
+      contents: buffer
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes('No processor registered')) {
+        console.error('No processor available for this document type')
+      } else if (error.message.includes('Failed to extract')) {
+        console.error('Document processing failed:', error.message)
+      } else {
+        console.error('Unexpected error:', error.message)
+      }
+    } else {
+      console.error('Unknown error:', error)
+    }
+    return null
+  }
+}
+```
+
 ## API Reference
 
 ### DocExtract Class
