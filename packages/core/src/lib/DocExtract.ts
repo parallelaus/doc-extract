@@ -1,5 +1,5 @@
 import { validateDocument, validateClientOptions } from './validate.js'
-import { DocExtractClientOptions, Document, docExtractClientOptionsSchema } from './types.js'
+import { DocExtractClientOptions, Document, ExtractedText, docExtractClientOptionsSchema } from './types.js'
 import { DocumentProcessor } from './DocumentProcessor.js'
 
 export class DocExtract {
@@ -44,7 +44,7 @@ export class DocExtract {
    * @param document The document to extract text from
    * @returns Extracted text from the document
    */
-  public async extract(document: Document): Promise<string> {
+  public async extract(document: Document): Promise<ExtractedText> {
     // Validate the document against registered processors
     const validatedDocument = await validateDocument(document, this.getSupportedMimeTypes())
 

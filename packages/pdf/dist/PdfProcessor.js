@@ -29,9 +29,6 @@ export class PdfProcessor {
         try {
             // Use pdf-parse to extract text from the PDF
             const pdfData = await pdfParse(document.contents);
-            console.log(Object.keys(pdfData));
-            console.log(pdfData.info);
-            console.log(pdfData.metadata);
             return { text: pdfData.text };
         }
         catch (error) {

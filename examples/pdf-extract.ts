@@ -13,9 +13,9 @@ async function extractPDF() {
     url
   }
 
-  const extractedText = await docExtract.extract(document)
+  const result = await docExtract.extract(document)
 
-  // console.log('Extracted Text:\n', extractedText)
+  console.log('Extracted Text:\n', result.text)
 }
 
 console.log('Extracting PDF...')
