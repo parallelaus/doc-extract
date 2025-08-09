@@ -1,14 +1,15 @@
 // Create local interfaces that match the core package interfaces
-// This avoids direct dependency on the core package's type exports
+// This avoids module resolution issues while maintaining type compatibility
 interface Document {
   type: string
   url?: string
   contents?: Buffer
+  filename?: string
 }
 
 interface DocumentProcessor {
   readonly supportedMimeType: string
-  process(document: Document): Promise<string>
+  process(doc: Document): Promise<string>
 }
 
 // Import pdf-parse with proper default import

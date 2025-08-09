@@ -2,10 +2,11 @@ interface Document {
     type: string;
     url?: string;
     contents?: Buffer;
+    filename?: string;
 }
 interface DocumentProcessor {
     readonly supportedMimeType: string;
-    process(document: Document): Promise<string>;
+    process(doc: Document): Promise<string>;
 }
 /**
  * PDF document processor implementation

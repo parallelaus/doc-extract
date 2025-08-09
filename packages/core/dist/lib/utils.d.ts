@@ -6,5 +6,5 @@
  * @param url URL to get document type from
  * @returns The document type (MIME type)
  */
-export declare function getDocumentType(url: string): Promise<string>;
+export declare function getDocumentType(url: string): Promise<string>
 //# sourceMappingURL=utils.d.ts.map

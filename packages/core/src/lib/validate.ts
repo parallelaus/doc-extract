@@ -26,10 +26,7 @@ export const isValidUrl = (value: string): boolean => {
  * @param supportedMimeTypes List of supported MIME types
  * @returns The validated document
  */
-export async function validateDocument(
-  document: Document,
-  supportedMimeTypes: string[]
-): Promise<Document> {
+export async function validateDocument(document: Document, supportedMimeTypes: string[]): Promise<Document> {
   // Validate document structure
   const validatedDocument = validateDocumentStructure(document, documentSchema)
 
@@ -73,13 +70,12 @@ export const validateDocumentStructure = (document: Document, documentSchema: z.
  * @throws Error if document type is not supported
  * @returns The validated document
  */
-export const validateDocumentType = (
-  document: Document,
-  supportedMimeTypes: string[]
-): Document => {
+export const validateDocumentType = (document: Document, supportedMimeTypes: string[]): Document => {
   // Check if document type is supported
   if (!supportedMimeTypes.includes(document.type)) {
-    throw new Error(`Document type '${document.type}' is not supported. Supported types: ${supportedMimeTypes.join(', ')}`)
+    throw new Error(
+      `Document type '${document.type}' is not supported. Supported types: ${supportedMimeTypes.join(', ')}`
+    )
   }
 
   return document
@@ -97,7 +93,7 @@ export const validateClientOptions = (
 ): DocExtractClientOptions => {
   // Use default options if none provided
   const defaultOptions: DocExtractClientOptions = {}
-  
+
   // Validate options with schema
   return clientOptionsSchema.parse(options || defaultOptions)
 }
