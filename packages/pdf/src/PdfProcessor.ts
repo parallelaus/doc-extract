@@ -22,7 +22,6 @@ export class PdfProcessor implements DocumentProcessor {
   public async process(document: Document): Promise<ExtractedText> {
     if (!document.contents) {
       // Get the file from the url
-      // eslint-disable-next-line no-undef
       const response = await fetch(document.url!)
       if (!response.ok) {
         throw new Error(`Error retrieveing PDF from URL: ${document.url}`)

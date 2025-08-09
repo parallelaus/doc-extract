@@ -1,1 +1,0 @@
-{"version":3,"file":"DocumentProcessor.d.ts","sourceRoot":"","sources":["../../src/lib/DocumentProcessor.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,aAAa,EAAE,MAAM,SAAS,CAAA;AAEjD;;;GAGG;AACH,MAAM,WAAW,iBAAiB;IAChC;;OAEG;IACH,QAAQ,CAAC,iBAAiB,EAAE,MAAM,CAAA;IAElC;;;;OAIG;IAEH,OAAO,CAAC,QAAQ,EAAE,QAAQ,GAAG,OAAO,CAAC,aAAa,CAAC,CAAA;CACpD"}
