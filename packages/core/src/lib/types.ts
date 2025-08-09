@@ -17,6 +17,10 @@ export const docExtractClientOptionsSchema = z.object({
   // Can add other global options here as needed
 })
 
+export const extractedTextSchema = z.object({
+  text: z.string()
+})
+
 // Generate types from schemas
 /**
  * Client options for DocExtract constructor
@@ -27,3 +31,8 @@ export type DocExtractClientOptions = z.infer<typeof docExtractClientOptionsSche
  * Document object for text extraction
  */
 export type Document = z.infer<typeof documentSchema>
+
+/**
+ * Extracted text from a document
+ */
+export type ExtractedText = z.infer<typeof extractedTextSchema>

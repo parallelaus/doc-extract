@@ -6,6 +6,9 @@ export declare const documentSchema: z.ZodObject<{
     contents: z.ZodOptional<z.ZodCustom<Buffer<ArrayBufferLike>, Buffer<ArrayBufferLike>>>;
 }, z.core.$strip>;
 export declare const docExtractClientOptionsSchema: z.ZodObject<{}, z.core.$strip>;
+export declare const extractedTextSchema: z.ZodObject<{
+    text: z.ZodString;
+}, z.core.$strip>;
 /**
  * Client options for DocExtract constructor
  */
@@ -14,4 +17,8 @@ export type DocExtractClientOptions = z.infer<typeof docExtractClientOptionsSche
  * Document object for text extraction
  */
 export type Document = z.infer<typeof documentSchema>;
+/**
+ * Extracted text from a document
+ */
+export type ExtractedText = z.infer<typeof extractedTextSchema>;
 //# sourceMappingURL=types.d.ts.map

@@ -1,4 +1,4 @@
-import type { Document } from '../../core/src/lib/types.js';
+import type { Document, ExtractedText } from '../../core/src/lib/types.js';
 import type { DocumentProcessor } from '../../core/src/lib/DocumentProcessor.js';
 /**
  * PDF document processor implementation
@@ -13,6 +13,6 @@ export declare class PdfProcessor implements DocumentProcessor {
      * @param document The PDF document to process
      * @returns Extracted text from the PDF document
      */
-    process(document: Document): Promise<string>;
+    process(document: Document): Promise<ExtractedText>;
 }
 //# sourceMappingURL=PdfProcessor.d.ts.map

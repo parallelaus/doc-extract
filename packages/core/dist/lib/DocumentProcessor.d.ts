@@ -1,4 +1,4 @@
-import { Document } from './types';
+import { Document, ExtractedText } from './types';
 /**
  * Interface for document processors
  * All document type processors must implement this interface
@@ -13,6 +13,6 @@ export interface DocumentProcessor {
      * @param document The document to process
      * @returns Extracted text from the document
      */
-    process(document: Document): Promise<string>;
+    process(document: Document): Promise<ExtractedText>;
 }
 //# sourceMappingURL=DocumentProcessor.d.ts.map

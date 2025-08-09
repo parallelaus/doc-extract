@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build:dev": "tsc --watch",
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
@@ -33,7 +34,7 @@
   },
   "type": "module",
   "dependencies": {
-    "pdf-parse": "^1.1.1"
+    "pdf-parse-debugging-disabled": "^1.1.1"
   },
   "peerDependencies": {
     "@parallelsoftware/doc-extract": "^1.0.0"

@@ -8,6 +8,7 @@
     "advanced": "node advanced-usage.js",
     "practical": "node practical-example.js",
     "typescript": "npx ts-node typescript-usage.ts",
+    "pdf-extract": "npx ts-node pdf-extract.ts",
     "cli": "node cli-tool.js",
     "cli:help": "node cli-tool.js help",
     "cli:supported": "node cli-tool.js supported",

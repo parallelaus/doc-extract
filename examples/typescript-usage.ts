@@ -107,7 +107,7 @@ async function main() {
       docExtract.registerProcessor(new PdfProcessor())
       console.log('PDF processor registered successfully')
     } catch (error) {
-      console.log('PDF processor not available:', error.message)
+      console.log('PDF processor not available:', (error as Error).message)
     }
 
     // Try to import DOCX processor
@@ -117,7 +117,7 @@ async function main() {
       docExtract.registerProcessor(new DocxProcessor())
       console.log('DOCX processor registered successfully')
     } catch (error) {
-      console.log('DOCX processor not available:', error.message)
+      console.log('DOCX processor not available:', (error as Error).message)
     }
 
     // Try to import Image processor
@@ -127,7 +127,7 @@ async function main() {
       docExtract.registerProcessor(new ImageProcessor())
       console.log('Image processor registered successfully')
     } catch (error) {
-      console.log('Image processor not available:', error.message)
+      console.log('Image processor not available:', (error as Error).message)
     }
 
     // Always register our custom CSV processor

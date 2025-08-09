@@ -14,4 +14,7 @@ export const docExtractClientOptionsSchema = z.object({
 // No longer need to specify allowed types here as they're determined by registered processors
 // Can add other global options here as needed
 });
+export const extractedTextSchema = z.object({
+    text: z.string()
+});
 //# sourceMappingURL=types.js.map

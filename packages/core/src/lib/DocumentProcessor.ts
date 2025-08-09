@@ -1,4 +1,4 @@
-import { Document } from './types'
+import { Document, ExtractedText } from './types'
 
 /**
  * Interface for document processors
@@ -15,5 +15,6 @@ export interface DocumentProcessor {
    * @param document The document to process
    * @returns Extracted text from the document
    */
-  process(document: Document): Promise<string>
+  // eslint-disable-next-line no-unused-vars
+  process(document: Document): Promise<ExtractedText>
 }

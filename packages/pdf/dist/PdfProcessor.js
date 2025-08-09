@@ -1,5 +1,5 @@
 // Import pdf-parse with proper default import
-import pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse-debugging-disabled';
 /**
  * PDF document processor implementation
  */
@@ -15,12 +15,24 @@ export class PdfProcessor {
      */
     async process(document) {
         if (!document.contents) {
-            throw new Error('PDF document must have contents');
+            // Get the file from the url
+            // eslint-disable-next-line no-undef
+            const response = await fetch(document.url);
+            if (!response.ok) {
+                throw new Error(`Error retrieveing PDF from URL: ${document.url}`);
+            }
+            if (!response.headers.get('content-type')?.startsWith('application/pdf')) {
+                throw new Error(`URL ${document.url} does not point to a PDF file`);
+            }
+            document.contents = Buffer.from(await response.arrayBuffer());
         }
         try {
             // Use pdf-parse to extract text from the PDF
             const pdfData = await pdfParse(document.contents);
-            return pdfData.text;
+            console.log(Object.keys(pdfData));
+            console.log(pdfData.info);
+            console.log(pdfData.metadata);
+            return { text: pdfData.text };
         }
         catch (error) {
             // Handle error properly with type checking

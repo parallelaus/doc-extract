@@ -6,6 +6,9 @@ import prettier from 'eslint-plugin-prettier'
 export default [
   js.configs.recommended,
   {
+    ignores: ['**/dist/**', '**/node_modules/**']
+  },
+  {
     files: ['**/*.ts', '**/*.js'],
     languageOptions: {
       parser: tsparser,
@@ -21,7 +24,8 @@ export default [
         __filename: 'readonly',
         exports: 'writable',
         module: 'writable',
-        require: 'readonly'
+        require: 'readonly',
+        fetch: 'readonly'
       }
     },
     plugins: {
