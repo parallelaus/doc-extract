@@ -1,16 +1,6 @@
-// Create local interfaces that match the core package interfaces
-// This avoids module resolution issues while maintaining type compatibility
-interface Document {
-  type: string
-  url?: string
-  contents?: Buffer
-  filename?: string
-}
-
-interface DocumentProcessor {
-  readonly supportedMimeType: string
-  process(doc: Document): Promise<string>
-}
+// Import types directly from the core package using relative paths
+import type { Document } from '../../core/src/lib/types.js'
+import type { DocumentProcessor } from '../../core/src/lib/DocumentProcessor.js'
 
 // Import sharp for image processing
 import sharp from 'sharp'
@@ -39,15 +29,12 @@ export class ImageProcessor implements DocumentProcessor {
     if (!doc.contents) {
       throw new Error('Image must have contents')
     }
-
     try {
       // Use sharp to process the image
       const metadata = await sharp(doc.contents).metadata()
-      
       // This is a placeholder for actual OCR processing
       // In a real implementation, you would use an OCR library or service
       return `[Image processed: ${metadata.width}x${metadata.height}, format: ${metadata.format}]
-
 To implement actual OCR, you would need to:
 1. Use an OCR library like Tesseract.js
 2. Or integrate with an OCR service like Google Cloud Vision API or AWS Textract`

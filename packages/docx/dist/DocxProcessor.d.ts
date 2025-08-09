@@ -1,13 +1,5 @@
-interface Document {
-    type: string;
-    url?: string;
-    contents?: Buffer;
-    filename?: string;
-}
-interface DocumentProcessor {
-    readonly supportedMimeType: string;
-    process(doc: Document): Promise<string>;
-}
+import type { Document } from '../../core/src/lib/types.js';
+import type { DocumentProcessor } from '../../core/src/lib/DocumentProcessor.js';
 /**
  * DOCX document processor implementation
  */
@@ -23,5 +15,4 @@ export declare class DocxProcessor implements DocumentProcessor {
      */
     process(doc: Document): Promise<string>;
 }
-export {};
 //# sourceMappingURL=DocxProcessor.d.ts.map

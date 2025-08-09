@@ -1,16 +1,6 @@
-// Create local interfaces that match the core package interfaces
-// This avoids module resolution issues while maintaining type compatibility
-interface Document {
-  type: string
-  url?: string
-  contents?: Buffer
-  filename?: string
-}
-
-interface DocumentProcessor {
-  readonly supportedMimeType: string
-  process(doc: Document): Promise<string>
-}
+// Import types directly from the core package using relative paths
+import type { Document } from '../../core/src/lib/types.js'
+import type { DocumentProcessor } from '../../core/src/lib/DocumentProcessor.js'
 
 // Import pdf-parse with proper default import
 import pdfParse from 'pdf-parse'

@@ -1,4 +1,4 @@
-import { DocExtract } from './lib/DocExtract.js'
+import { DocExtract } from './lib/DocExtract.js';
 // Re-export public DocExtract class
-export { DocExtract }
+export { DocExtract };
 //# sourceMappingURL=index.js.map

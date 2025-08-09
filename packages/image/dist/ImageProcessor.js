@@ -28,7 +28,6 @@ export class ImageProcessor {
             // This is a placeholder for actual OCR processing
             // In a real implementation, you would use an OCR library or service
             return `[Image processed: ${metadata.width}x${metadata.height}, format: ${metadata.format}]
-
 To implement actual OCR, you would need to:
 1. Use an OCR library like Tesseract.js
 2. Or integrate with an OCR service like Google Cloud Vision API or AWS Textract`;
