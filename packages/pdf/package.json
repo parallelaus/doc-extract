@@ -1,0 +1,35 @@
+{
+  "name": "@parallelsoftware/doc-extract-pdf",
+  "version": "1.0.0",
+  "description": "PDF processor plugin for doc-extract",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "Anton R. Menkveld",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  },
+  "peerDependencies": {
+    "@parallelsoftware/doc-extract": "^1.0.0"
+  }
+}

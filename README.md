@@ -1,6 +1,6 @@
 # DocExtract
 
-Intelligent document extraction package for TypeScript applications.
+Intelligent document extraction package for TypeScript applications with modular plugin architecture.
 
 ## Overview
 
@@ -14,29 +14,53 @@ DocExtract is a TypeScript library designed to extract text content from various
 - 📝 **TypeScript Support**: Full type safety with comprehensive type definitions
 - 🛡️ **Input Validation**: Built-in validation for document types and sources
 - 🧪 **Well Tested**: Comprehensive test suite with high coverage
+- 🧩 **Modular Plugin Architecture**: Only install dependencies for document types you need
+- 📦 **Minimal Core**: Core package has minimal dependencies
 
 ## Installation
+
+### Core Package
 
 ```bash
 npm install @parallelsoftware/doc-extract
 ```
 
+### Document Type Processors
+
+Install only the processors you need:
+
+```bash
+# For PDF support
+npm install @parallelsoftware/doc-extract-pdf
+
+# For DOCX support
+npm install @parallelsoftware/doc-extract-docx
+
+# For image support
+npm install @parallelsoftware/doc-extract-image
+```
+
 ## Quick Start
 
 ```typescript
-import { DocExtract, Document } from '@parallelsoftware/doc-extract'
+import { DocExtract } from '@parallelsoftware/doc-extract'
+import { PdfProcessor } from '@parallelsoftware/doc-extract-pdf'
+import { DocxProcessor } from '@parallelsoftware/doc-extract-docx'
 
-// Create an instance with default settings
-const extractor = new DocExtract()
+// Create an instance
+const docExtract = new DocExtract()
 
-// Extract from a document URL
-const document: Document = {
+// Register only the processors you need
+docExtract.registerProcessor(new PdfProcessor())
+docExtract.registerProcessor(new DocxProcessor())
+
+// Extract from a document
+const extractedText = await docExtract.extract({
   filename: 'example.pdf',
   type: 'application/pdf',
   url: 'https://example.com/document.pdf'
-}
+})
 
-const extractedText = await extractor.extractText(document)
 console.log(extractedText)
 ```
 
