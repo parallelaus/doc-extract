@@ -1,4 +1,4 @@
-import { Document } from './types.js'
+import { Document } from './types'
 
 /**
  * Interface for document processors

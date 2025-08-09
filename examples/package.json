@@ -1,0 +1,43 @@
+{
+  "name": "doc-extract-examples",
+  "version": "1.0.0",
+  "description": "Examples for @parallelsoftware/doc-extract package",
+  "type": "module",
+  "scripts": {
+    "basic": "node basic-usage.js",
+    "advanced": "node advanced-usage.js",
+    "practical": "node practical-example.js",
+    "typescript": "npx ts-node typescript-usage.ts",
+    "cli": "node cli-tool.js",
+    "cli:help": "node cli-tool.js help",
+    "cli:supported": "node cli-tool.js supported",
+    "cli:extract": "node cli-tool.js extract sample-files/sample.pdf --output extracted.txt",
+    "cli:batch": "node cli-tool.js batch sample-files --output extracted-text",
+    "web": "cd web-app-integration && npm install && npm start",
+    "setup": "mkdir -p sample-files && echo 'Sample text file for testing' > sample-files/sample.txt"
+  },
+  "keywords": [
+    "document",
+    "extraction",
+    "pdf",
+    "docx",
+    "image",
+    "ocr",
+    "text",
+    "examples"
+  ],
+  "author": "Anton R. Menkveld",
+  "license": "MIT",
+  "dependencies": {
+    "@parallelsoftware/doc-extract": "file:../packages/core",
+    "@parallelsoftware/doc-extract-pdf": "file:../packages/pdf",
+    "@parallelsoftware/doc-extract-docx": "file:../packages/docx",
+    "@parallelsoftware/doc-extract-image": "file:../packages/image"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

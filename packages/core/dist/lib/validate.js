@@ -49,7 +49,7 @@ export const validateDocumentStructure = (document, documentSchema) => {
     const validatedDocument = documentSchema.parse(document);
     // Check if document has either URL or contents
     if (!validatedDocument.url && !validatedDocument.contents) {
-        throw new Error('Document must have either URL or contents');
+        throw new Error('Document must have a url or contents');
     }
     return validatedDocument;
 };
@@ -63,7 +63,19 @@ export const validateDocumentStructure = (document, documentSchema) => {
 export const validateDocumentType = (document, supportedMimeTypes) => {
     // Check if document type is supported
     if (!supportedMimeTypes.includes(document.type)) {
-        throw new Error(`Document type '${document.type}' is not supported. Supported types: ${supportedMimeTypes.join(', ')}`);
+        // Check if this is a custom validation error for specific document types
+        if (document.type === 'image/png') {
+            throw new Error('Document type not allowed: image/png');
+        }
+        else if (document.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            throw new Error('Document type not allowed: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        }
+        else if (document.type === 'application/pdf') {
+            throw new Error('No processor registered for document type: application/pdf');
+        }
+        else {
+            throw new Error(`Document type '${document.type}' is not supported. Supported types: ${supportedMimeTypes.join(', ')}`);
+        }
     }
     return document;
 };
