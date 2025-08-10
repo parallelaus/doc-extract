@@ -18,7 +18,7 @@ export class DocxProcessor implements DocumentProcessor {
    * @param document The DOCX document to process
    * @returns Extracted text from the DOCX document
    */
-  public async process(doc: Document): Promise<string> {
+  public async process(doc: Document): Promise<{ text: string }> {
     if (!doc.contents) {
       throw new Error('DOCX document must have contents')
     }
@@ -27,7 +27,7 @@ export class DocxProcessor implements DocumentProcessor {
       // Use docx library to extract text from the DOCX
       // Note: This is a simplified example, actual implementation would use proper docx API
       // In a real implementation, we would parse the doc.contents
-      return 'DOCX text extraction placeholder'
+      return { text: 'DOCX text extraction placeholder' }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error)
       throw new Error(`Failed to extract text from DOCX: ${errorMessage}`)

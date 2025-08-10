@@ -8,7 +8,6 @@
  * @returns The document type (MIME type)
  */
 export async function getDocumentType(url: string): Promise<string> {
-  // eslint-disable-next-line no-undef
   const response = await fetch(url, {
     method: 'HEAD'
   })
